@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live CV Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .cv-section {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-6">Live CV Builder</h1>
+
+        <!-- Input Form -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div>
+                <label class="block text-sm font-medium">Profile Image</label>
+                <input type="file" id="imageUpload" class="mt-1 block w-full">
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">Name</label>
+                <input type="text" id="name" class="mt-1 block w-full border border-gray-300 p-2 rounded">
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">Role</label>
+                <input type="text" id="role" class="mt-1 block w-full border border-gray-300 p-2 rounded">
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">About Me</label>
+                <textarea id="about" class="mt-1 block w-full border border-gray-300 p-2 rounded"></textarea>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">Skills (comma-separated)</label>
+                <input type="text" id="skills" class="mt-1 block w-full border border-gray-300 p-2 rounded">
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">Experience</label>
+                <textarea id="experience" class="mt-1 block w-full border border-gray-300 p-2 rounded"></textarea>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium">Education</label>
+                <textarea id="education" class="mt-1 block w-full border border-gray-300 p-2 rounded"></textarea>
+            </div>
+            <div class="mt-6">
+                <button onclick="generateCV()" class="bg-purple-600 text-white px-4 py-2 rounded">Generate CV</button>
+            </div>
+        </div>
+
+        <!-- CV Display -->
+        <div id="cvOutput" class="bg-white p-6 rounded-lg shadow-md"></div>
+    </div>
+
+    <script>
+        function generateCV() {
+            const name = document.getElementById('name').value;
+            const role = document.getElementById('role').value;
+            const about = document.getElementById('about').value;
+            const skills = document.getElementById('skills').value.split(',');
+            const experience = document.getElementById('experience').value;
+            const education = document.getElementById('education').value;
+
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imageSrc = e.target.result;
+
+                document.getElementById('cvOutput').innerHTML = `
+                <div class="text-center">
+                    <img src="${imageSrc}" class="w-32 h-32 mx-auto rounded-full object-cover" alt="Profile Image">
+                    <h2 class="text-2xl font-bold mt-4">${name}</h2>
+                    <h3 class="text-xl text-purple-600">${role}</h3>
+                </div>
+                <div class="cv-section">
+                    <h4 class="font-semibold text-lg mb-1">About Me</h4>
+                    <p>${about}</p>
+                </div>
+                <div class="cv-section">
+                    <h4 class="font-semibold text-lg mb-1">Skills</h4>
+                    <ul class="list-disc list-inside">${skills.map(skill => `<li>${skill.trim()}</li>`).join('')}</ul>
+                </div>
+                <div class="cv-section">
+                    <h4 class="font-semibold text-lg mb-1">Experience</h4>
+                    <p>${experience.replace(/\n/g, '<br>')}</p>
+                </div>
+                <div class="cv-section">
+                    <h4 class="font-semibold text-lg mb-1">Education</h4>
+                    <p>${education.replace(/\n/g, '<br>')}</p>
+                </div>
+                `;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>

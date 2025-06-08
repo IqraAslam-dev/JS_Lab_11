@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 30px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+input{
+    padding: 8px;
+    margin-bottom: 10px;
+    width: 300px;
+    display: block;
+    background-color: rgba(243, 2, 2, 0.666);
+}
+button{
+    padding: 8px 12px;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+ul{
+    margin-top: 20px;
+    padding-left: 20px;
+}
+.interest-field{
+    color: white;
+    background-color: rgb(69, 70, 71);
+}

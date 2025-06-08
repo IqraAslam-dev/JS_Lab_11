@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live CV Builder - Profile Image Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #e9ddfc;
+        }
+
+        .cv-shadow {
+            box-shadow: 0 8px 32px rgba(80, 51, 170, 0.14);
+        }
+
+        .cv-dot {
+            width: 12px;
+            height: 12px;
+        }
+
+        .skill-bar {
+            height: 6px;
+            background: #f3f3f3;
+            border-radius: 3px;
+        }
+
+        .skill-bar-fill {
+            height: 6px;
+            background: #ffcb05;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col md:flex-row gap-8 items-start justify-center py-8">
+    <!-- FORM -->
+    <form id="cvForm" class="w-full max-w-md bg-white rounded-xl p-6 mb-8 shadow-xl space-y-4">
+        <h2 class="text-2xl font-bold text-purple-700 mb-2">CV Details</h2>
+        <div>
+            <label class="block text-sm font-semibold">Full Name</label>
+            <input name="name" type="text" class="w-full border rounded px-2 py-1" value="JOHN SMITH" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Job Title</label>
+            <input name="title" type="text" class="w-full border rounded px-2 py-1 uppercase" value="ART DIRECTOR" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Profile Image</label>
+            <input name="photo" type="file" accept="image/*" class="w-full border rounded px-2 py-1"
+                onchange="previewImage(event)" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">About Me</label>
+            <textarea name="about" class="w-full border rounded px-2 py-1"
+                rows="2">Creative and detail-oriented designer with 8+ years of experience.</textarea>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Address</label>
+            <input name="address" type="text" class="w-full border rounded px-2 py-1"
+                value="789, Street main, New York City, USA" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Phone</label>
+            <input name="phone" type="text" class="w-full border rounded px-2 py-1" value="+123 4567 8910" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Email</label>
+            <input name="email" type="email" class="w-full border rounded px-2 py-1" value="you@email.com" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Website</label>
+            <input name="website" type="text" class="w-full border rounded px-2 py-1" value="www.websamp.com" />
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Skills</label>
+            <div id="skillsFields"></div>
+            <button type="button" onclick="addSkill()"
+                class="mt-1 text-xs px-2 py-1 bg-purple-200 rounded text-purple-800">+ Add Skill</button>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Experience</label>
+            <div id="expFields"></div>
+            <button type="button" onclick="addExp()"
+                class="mt-1 text-xs px-2 py-1 bg-purple-200 rounded text-purple-800">+ Add Experience</button>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Education</label>
+            <div id="eduFields"></div>
+            <button type="button" onclick="addEdu()"
+                class="mt-1 text-xs px-2 py-1 bg-purple-200 rounded text-purple-800">+ Add Education</button>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">References</label>
+            <div id="refFields"></div>
+            <button type="button" onclick="addRef()"
+                class="mt-1 text-xs px-2 py-1 bg-purple-200 rounded text-purple-800">+ Add Reference</button>
+        </div>
+        <div>
+            <label class="block text-sm font-semibold">Social Links</label>
+            <div id="socialFields"></div>
+            <button type="button" onclick="addSocial()"
+                class="mt-1 text-xs px-2 py-1 bg-purple-200 rounded text-purple-800">+ Add Social</button>
+        </div>
+    </form>
+
+    <div class="w-[700px] bg-white rounded-xl cv-shadow flex overflow-hidden">
+        <div class="w-[230px] bg-purple-700 text-white flex flex-col items-center py-8 px-4 relative">
+            <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white mb-4">
+                <img id="cvPhoto" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile"
+                    class="w-full h-full object-cover">
+            </div>
+            <div class="absolute top-8 right-8 flex flex-col gap-2">
+                <div class="cv-dot rounded-full bg-yellow-400"></div>
+                <div class="cv-dot rounded-full bg-yellow-400"></div>
+            </div>
+            <div class="w-full mt-2">
+                <h3 class="uppercase text-xs font-bold tracking-widest mb-2 text-yellow-400">Contact Me</h3>
+                <div class="text-sm mb-1 flex items-start gap-2">
+                    <span>🏠</span>
+                    <span id="cvAddress">789, Street main, New York City, USA</span>
+                </div>
+                <div class="text-sm mb-1 flex items-center gap-2">
+                    <span>📞</span>
+                    <span id="cvPhone">+123 4567 8910</span>
+                </div>
+                <div class="text-sm mb-1 flex items-center gap-2">
+                    <span>✉️</span>
+                    <span id="cvEmail">you@email.com</span>
+                </div>
+                <div class="text-sm mb-3 flex items-center gap-2">
+                    <span>🌐</span>
+                    <span id="cvWebsite">www.websamp.com</span>
+                </div>
+            </div>
+            <div class="w-full mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest mb-2 text-yellow-400">Pro Skills</h3>
+                <div id="cvSkills" class="space-y-3"></div>
+            </div>
+            <div class="w-full mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest mb-2 text-yellow-400">Follow Me</h3>
+                <div id="cvSocials" class="space-y-1 text-xs"></div>
+            </div>
+        </div>
+        <div class="flex-1 p-8">
+            <div class="flex items-center gap-4">
+                <div>
+                    <div id="cvName" class="text-3xl font-bold text-purple-800">JOHN SMITH</div>
+                    <div id="cvTitle" class="uppercase text-gray-600 tracking-wider text-lg">ART DIRECTOR</div>
+                </div>
+                <div class="flex-1 border-t-4 border-yellow-400 ml-4"></div>
+            </div>
+            <div class="mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest text-purple-800">About Me</h3>
+                <p id="cvAbout" class="text-sm text-gray-700 mt-1">Creative and detail-oriented designer with 8+ years
+                    of experience.</p>
+            </div>
+            <div class="mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest text-purple-800">Experience</h3>
+                <div id="cvExp" class="space-y-2 mt-2"></div>
+            </div>
+            <div class="mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest text-purple-800">Education</h3>
+                <div id="cvEdu" class="space-y-2 mt-2"></div>
+            </div>
+            <div class="mt-4">
+                <h3 class="uppercase text-xs font-bold tracking-widest text-purple-800">References</h3>
+                <div id="cvRef" class="space-y-2 mt-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let skills = [
+            { name: "PHOTOSHOP", percent: 90 },
+            { name: "ILLUSTRATOR", percent: 85 },
+            { name: "INDESIGN", percent: 80 },
+            { name: "MS WORD", percent: 75 },
+            { name: "MS EXCEL", percent: 70 }
+        ];
+        let exp = [
+            { years: "2015 - 2018", job: "SENIOR WEB DEVELOPER", company: "Vision Xpower", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui enim consequatur." },
+            { years: "2013 - 2015", job: "LEAD WEB DEVELOPER", company: "SoftTech Nights", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui enim consequatur." },
+            { years: "2011 - 2013", job: "WEB & GRAPHIC DESIGNER", company: "Creative Corporation", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui enim consequatur." }
+        ];
+        let edu = [
+            { years: "2019 - 2021", degree: "BACHELORS OF ARTS", school: "Asian University", desc: "Lorem ipsum dolor sit amet consectetur." },
+            { years: "2008 - 2010", degree: "HIGHER SECONDARY EXAMINATION", school: "Creative School", desc: "Lorem ipsum dolor sit amet consectetur." },
+            { years: "2004 - 2008", degree: "HIGHER SECONDARY EXAMINATION", school: "Cherish School", desc: "Lorem ipsum dolor sit amet consectetur." }
+        ];
+        let ref = [
+            { name: "Jonathan Deo", info: "789, Street main, New York City, USA" },
+            { name: "Jabin Smith", info: "789, Street main, New York City, USA" }
+        ];
+        let socials = [
+            { label: "Facebook", value: "facebook.com/yourname" },
+            { label: "Twitter", value: "twitter.com/yourname" }
+        ];
+
+        function renderSkills() {
+            document.getElementById('skillsFields').innerHTML = skills.map((s, i) => `
+        <div class="flex items-center gap-2 mb-1">
+          <input type="text" class="border rounded px-2 py-1 flex-1" value="${s.name}" onchange="skills[${i}].name=this.value;updateCV()">
+          <input type="number" min="0" max="100" class="border rounded px-2 py-1 w-16" value="${s.percent}" onchange="skills[${i}].percent=this.value;updateCV()">
+          <button type="button" onclick="skills.splice(${i},1);renderSkills();updateCV()" class="text-red-500 font-bold text-xl">&minus;</button>
+        </div>
+      `).join('');
+            document.getElementById('cvSkills').innerHTML = skills.map(s => `
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-semibold">${s.name}</span>
+          </div>
+          <div class="skill-bar w-full bg-white">
+            <div class="skill-bar-fill" style="width:${s.percent}%;"></div>
+          </div>
+        </div>
+      `).join('');
+        }
+        function addSkill() { skills.push({ name: "", percent: 50 }); renderSkills(); }
+        function renderExp() {
+            document.getElementById('expFields').innerHTML = exp.map((e, i) => `
+        <div class="flex flex-col mb-2 gap-1">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Years" value="${e.years}" onchange="exp[${i}].years=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Job Title" value="${e.job}" onchange="exp[${i}].job=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Company" value="${e.company}" onchange="exp[${i}].company=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Description" value="${e.desc}" onchange="exp[${i}].desc=this.value;updateCV()">
+          <button type="button" onclick="exp.splice(${i},1);renderExp();updateCV()" class="text-red-500 font-bold text-xl w-6">&minus;</button>
+        </div>
+      `).join('');
+            document.getElementById('cvExp').innerHTML = exp.map(e => `
+        <div class="flex gap-4">
+          <div class="w-32 text-xs font-semibold text-purple-700">${e.years}</div>
+          <div>
+            <div class="font-bold text-sm">${e.job}</div>
+            <div class="text-xs text-gray-500">${e.company}</div>
+            <div class="text-xs text-gray-400">${e.desc}</div>
+          </div>
+        </div>
+      `).join('');
+        }
+        function addExp() { exp.push({ years: "", job: "", company: "", desc: "" }); renderExp(); }
+        function renderEdu() {
+            document.getElementById('eduFields').innerHTML = edu.map((e, i) => `
+        <div class="flex flex-col mb-2 gap-1">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Years" value="${e.years}" onchange="edu[${i}].years=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Degree" value="${e.degree}" onchange="edu[${i}].degree=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="School" value="${e.school}" onchange="edu[${i}].school=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Description" value="${e.desc}" onchange="edu[${i}].desc=this.value;updateCV()">
+          <button type="button" onclick="edu.splice(${i},1);renderEdu();updateCV()" class="text-red-500 font-bold text-xl w-6">&minus;</button>
+        </div>
+      `).join('');
+            document.getElementById('cvEdu').innerHTML = edu.map(e => `
+        <div class="flex gap-4">
+          <div class="w-32 text-xs font-semibold text-purple-700">${e.years}</div>
+          <div>
+            <div class="font-bold text-sm">${e.degree}</div>
+            <div class="text-xs text-gray-500">${e.school}</div>
+            <div class="text-xs text-gray-400">${e.desc}</div>
+          </div>
+        </div>
+      `).join('');
+        }
+        function addEdu() { edu.push({ years: "", degree: "", school: "", desc: "" }); renderEdu(); }
+        function renderRef() {
+            document.getElementById('refFields').innerHTML = ref.map((r, i) => `
+        <div class="flex flex-col mb-2 gap-1">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Name" value="${r.name}" onchange="ref[${i}].name=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Info" value="${r.info}" onchange="ref[${i}].info=this.value;updateCV()">
+          <button type="button" onclick="ref.splice(${i},1);renderRef();updateCV()" class="text-red-500 font-bold text-xl w-6">&minus;</button>
+        </div>
+      `).join('');
+            document.getElementById('cvRef').innerHTML = ref.map(r => `
+        <div class="flex gap-4">
+          <div class="font-bold text-sm">${r.name}</div>
+          <div class="text-xs text-gray-500">${r.info}</div>
+        </div>
+      `).join('');
+        }
+        function addRef() { ref.push({ name: "", info: "" }); renderRef(); }
+        function renderSocial() {
+            document.getElementById('socialFields').innerHTML = socials.map((s, i) => `
+        <div class="flex items-center gap-2 mb-1">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Label" value="${s.label}" onchange="socials[${i}].label=this.value;updateCV()">
+          <input type="text" class="border rounded px-2 py-1" placeholder="Link" value="${s.value}" onchange="socials[${i}].value=this.value;updateCV()">
+          <button type="button" onclick="socials.splice(${i},1);renderSocial();updateCV()" class="text-red-500 font-bold text-xl">&minus;</button>
+        </div>
+      `).join('');
+            document.getElementById('cvSocials').innerHTML = socials.map(s => `
+        <div><span class="font-semibold">${s.label}:</span> ${s.value}</div>
+      `).join('');
+        }
+        function addSocial() { socials.push({ label: "", value: "" }); renderSocial(); }
+
+        function updateCV() {
+            const f = document.forms.cvForm;
+            document.getElementById('cvName').textContent = f.name.value;
+            document.getElementById('cvTitle').textContent = f.title.value;
+            document.getElementById('cvAbout').textContent = f.about.value;
+            document.getElementById('cvAddress').textContent = f.address.value;
+            document.getElementById('cvPhone').textContent = f.phone.value;
+            document.getElementById('cvEmail').textContent = f.email.value;
+            document.getElementById('cvWebsite').textContent = f.website.value;
+            renderSkills(); renderExp(); renderEdu(); renderRef(); renderSocial();
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('cvPhoto').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        renderSkills(); renderExp(); renderEdu(); renderRef(); renderSocial();
+        updateCV();
+        document.getElementById('cvForm').addEventListener('input', updateCV);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+#btn1 {
+    width: 70px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    padding: 2px;
+    align-items: center;
+    align-content: center;
+    background-color: #ef4444;
+    cursor: pointer;
+}
+
+#btn1:hover {
+    background-color: #ec2222;
+}
+
+#btn2 {
+    width: 70px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    padding: 2px;
+    align-items: center;
+    align-content: center;
+    background-color: #fbbf24;
+    cursor: pointer;
+}
+
+#btn2:hover {
+    background-color: #f6b101;
+}
+
+#btn3 {
+    width: 70px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    padding: 2px;
+    align-items: center;
+    align-content: center;
+    background-color: #3b82f6;
+    cursor: pointer;
+}
+#btn3:hover {
+    background-color: #1869eb;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 60px;
+}
+#parent{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    
+}
+p{
+    color: #d36969;
+    font-weight: bold;
+}
